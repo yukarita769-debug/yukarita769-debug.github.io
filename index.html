@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nishizono Yuri | Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            color: #1a1a1a;
+            background: #fff;
+            line-height: 1.8;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .logo {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 40px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 13px;
+            letter-spacing: 0.1em;
+            transition: opacity 0.3s;
+        }
+
+        nav ul li a:hover {
+            opacity: 0.4;
+        }
+
+        /* Hero */
+        #hero {
+            height: 100vh;
+            background: #f5f2ee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 40px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-name-en {
+            font-size: 11px;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 32px;
+        }
+
+        .hero-title {
+            font-size: clamp(28px, 4.5vw, 56px);
+            font-weight: 300;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            margin-bottom: 32px;
+            color: #1a1a1a;
+        }
+
+        .hero-sub {
+            font-size: 12px;
+            color: #aaa;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            color: #bbb;
+        }
+
+        /* Section common */
+        .section-wrap {
+            padding: 120px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #bbb;
+            margin-bottom: 64px;
+            display: block;
+        }
+
+        /* About */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .about-heading {
+            font-size: clamp(26px, 3vw, 40px);
+            font-weight: 300;
+            line-height: 1.6;
+            letter-spacing: 0.03em;
+        }
+
+        .about-name {
+            margin-top: 24px;
+            font-size: 12px;
+            letter-spacing: 0.3em;
+            color: #aaa;
+        }
+
+        .about-photo {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+            margin-bottom: 40px;
+            filter: grayscale(15%);
+        }
+
+        .about-text {
+            font-size: 14px;
+            line-height: 2.2;
+            color: #555;
+        }
+
+        /* Skills */
+        #skills-section {
+            background: #1a1a1a;
+        }
+
+        #skills-section .section-label {
+            color: #555;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: #2a2a2a;
+        }
+
+        .skill-item {
+            background: #1a1a1a;
+            padding: 36px 32px;
+            font-size: 13px;
+            letter-spacing: 0.15em;
+            color: #ddd;
+            transition: background 0.3s;
+        }
+
+        .skill-item:hover {
+            background: #252525;
+        }
+
+        /* Works */
+        .works-categories {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 64px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 10px 24px;
+            border: 1px solid #ddd;
+            background: none;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: inherit;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: #1a1a1a;
+            color: #fff;
+            border-color: #1a1a1a;
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .work-card {
+            aspect-ratio: 4/3;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .work-card[data-cat="product"] { background: #ede8e3; }
+        .work-card[data-cat="produce"] { background: #e8ede3; }
+        .work-card[data-cat="movie"]   { background: #1a1a1a; }
+        .work-card[data-cat="graphic"] { background: #e3e8ed; }
+        .work-card[data-cat="design"]  { background: #ede3e8; }
+        .work-card[data-cat="art"]     { background: #ece3ed; }
+
+        .work-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+
+        .work-card[data-cat="movie"] .work-placeholder { color: #444; }
+        .work-card:not([data-cat="movie"]) .work-placeholder { color: #bbb; }
+        .work-card[data-cat="art"] .work-placeholder { color: #bbb; }
+
+        .work-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .work-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(26,26,26,0.82);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            color: #fff;
+            gap: 8px;
+        }
+
+        .work-card:hover .work-overlay {
+            opacity: 1;
+        }
+
+        .work-tag {
+            font-size: 10px;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+
+        .work-title {
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-align: center;
+            padding: 0 12px;
+        }
+
+        .work-desc {
+            font-size: 11px;
+            line-height: 1.7;
+            text-align: center;
+            padding: 0 16px;
+            opacity: 0.7;
+            margin-top: 6px;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 13px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .footer-copy {
+            font-size: 11px;
+            color: #555;
+            letter-spacing: 0.1em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 16px 24px; }
+            nav ul { gap: 20px; }
+            .section-wrap { padding: 80px 24px; }
+            .about-grid { grid-template-columns: 1fr; gap: 48px; }
+            .skills-grid { grid-template-columns: repeat(2, 1fr); }
+            .works-grid { grid-template-columns: repeat(2, 1fr); }
+            footer { flex-direction: column; gap: 16px; text-align: center; padding: 40px 24px; }
+        }
+
+        @media (max-width: 480px) {
+            .works-grid { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Nishizono Yuri</div>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#works">Works</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section id="hero">
+        <div class="hero-content">
+            <p class="hero-name-en">Nishizono Yuri &mdash; Creative Designer</p>
+            <h1 class="hero-title">お客様の需要と商品を<br>マッチさせるデザインを形に。</h1>
+            <p class="hero-sub">Product &nbsp;·&nbsp; Produce &nbsp;·&nbsp; Movie &nbsp;·&nbsp; Graphic &nbsp;·&nbsp; Design</p>
+        </div>
+        <p class="scroll-indicator">Scroll ↓</p>
+    </section>
+
+    <!-- About -->
+    <div id="about">
+        <div class="section-wrap">
+            <span class="section-label">About</span>
+            <div class="about-grid">
+                <div>
+                    <img src="%E8%A5%BF%E8%96%97%E5%84%AA%E9%87%8C%E3%81%AE%E5%86%99%E7%9C%9F/IMG_5687.JPG" alt="Nishizono Yuri" class="about-photo">
+                    <h2 class="about-heading">デザインで、<br>正しい出会いを<br>つくる。</h2>
+                    <p class="about-name">西薗 優里 &nbsp;/&nbsp; Nishizono Yuri</p>
+                </div>
+                <div>
+                    <p class="about-text">
+                        世の中にはデザインの仕事が溢れています。魅力的なポスターやパンフレット、使いやすいリモコン、もっと言えばセールスプロセスのような抽象的なものもデザインされている。<br><br>
+                        私が心がけているのは商品とお客様のミスマッチを防ぎ、お客様が頑張って稼いだお金を無駄にしない、「ここに決めてよかった」を思われる正しいマッチングに向けたセールスプロセスを動画やバナー制作、HP運用を駆使して実現します。<br><br>
+                        また、AI活用によるアプリ制作やシステム導入で社内プロセスの簡易化も形にすることで、よりお客様対応へ集中できるよう業務改善にも取り組んでいます。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills -->
+    <div id="skills-section">
+        <div id="skills" class="section-wrap">
+            <span class="section-label">Skills</span>
+            <div class="skills-grid">
+                <div class="skill-item">Premiere Pro</div>
+                <div class="skill-item">After Effects</div>
+                <div class="skill-item">Photoshop</div>
+                <div class="skill-item">Illustrator</div>
+                <div class="skill-item">WordPress</div>
+                <div class="skill-item">Claude Code</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Works -->
+    <div id="works">
+        <div class="section-wrap">
+            <span class="section-label">Works</span>
+            <div class="works-categories">
+                <button class="category-btn active" data-filter="all">All</button>
+                <button class="category-btn" data-filter="product">Product</button>
+                <button class="category-btn" data-filter="produce">Produce</button>
+                <button class="category-btn" data-filter="movie">Movie</button>
+                <button class="category-btn" data-filter="graphic">Graphic</button>
+                <button class="category-btn" data-filter="design">Design</button>
+                <button class="category-btn" data-filter="art">Art</button>
+            </div>
+            <div class="works-grid">
+                <div class="work-card" data-cat="product">
+                    <div class="work-placeholder">Product</div>
+                    <div class="work-overlay">
+                        <span class="work-tag">Product</span>
+                        <span class="work-title">作品タイトル</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="produce">
+                    <div class="work-placeholder">Produce</div>
+                    <div class="work-overlay">
+                        <span class="work-tag">Produce</span>
+                        <span class="work-title">作品タイトル</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="movie">
+                    <div class="work-placeholder">Movie</div>
+                    <div class="work-overlay">
+                        <span class="work-tag">Movie</span>
+                        <span class="work-title">作品タイトル</span>
+                    </div>
+                </div>
+                <!-- Graphic -->
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.02.07.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">缶コーヒーSNSバナー 微糖</span>
+                        <span class="work-desc">三本珈琲。自販機向け商品の清潔感ある販促バナーデザイン。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.02.08.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">缶コーヒーSNSバナー BLACK</span>
+                        <span class="work-desc">三本珈琲。無糖ブラックの商品バナー。シンプルで力強い訴求。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.02.09_1.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">Monthly Coffee Recipes Vol.2</span>
+                        <span class="work-desc">ジンジャーコーヒーレシピシリーズの表紙。統一感のあるSNS投稿デザイン。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.02.09_2.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">レシピ材料ページ</span>
+                        <span class="work-desc">材料を俯瞰撮影で整理した、見やすいビジュアルレシピ。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.02.09_4.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">レシピ手順ページ</span>
+                        <span class="work-desc">写真と文字で工程をわかりやすく伝えるステップデザイン。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.1_1.jpeg" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">GOLD TASTE 商品プロモーション</span>
+                        <span class="work-desc">スペシャルブレンドの世界観を伝えるプロダクトビジュアル。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.1_4.jpeg" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">ORIGINAL BLEND 秋のスタイリング</span>
+                        <span class="work-desc">秋の情景に商品を溶け込ませた、季節感あるスタイリング撮影。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.1_6_1.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">Tasting Notes SNS投稿</span>
+                        <span class="work-desc">コーヒー鑑定士の視点でオーガニックコーヒーを紹介するコンテンツ。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.1_9_1.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">Monthly Coffee Recipes Vol.1</span>
+                        <span class="work-desc">ドリップコーヒーレシピシリーズの表紙。シンプルで親しみやすいデザイン。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.1_9_2.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">ドリップレシピ 手順 1-2</span>
+                        <span class="work-desc">丁寧なドリップの工程を写真と文字で伝えるビジュアルレシピ。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/2024.1_9_3.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">ドリップレシピ 手順 3-4</span>
+                        <span class="work-desc">完成までの流れをビジュアルで締めくくるレシピシリーズ最終ページ。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/IMG_0932.PNG" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">冬の贈りもの 2023</span>
+                        <span class="work-desc">「冴ゆる、ふゆ。」のコピーで温かさを届けるウィンターギフトビジュアル。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/IMG_5272.PNG" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">水玉リフティング バナー</span>
+                        <span class="work-desc">「もちっ」の表現で美容施術の効果をビジュアルで訴求する広告バナー。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/IMG_5287.PNG" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">ニキビケア SNS 2025</span>
+                        <span class="work-desc">美容医療への導線を意識した、ターゲットへ響くSNS投稿デザイン。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/IMG_6378.PNG" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">エレクトロポレーション メニュー表</span>
+                        <span class="work-desc">施術内容と料金を整理し、選びやすさを重視した美容クリニックフライヤー。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/%E3%82%A2%E3%83%BC%E3%83%88%E3%83%9C%E3%83%BC%E3%83%89%201.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">GW大特価キャンペーンバナー</span>
+                        <span class="work-desc">期間限定の緊急感を演出した美容クリニックのキャンペーン告知バナー。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="graphic">
+                    <img src="%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF/20250528%E3%82%A2%E3%83%BC%E3%83%88%E3%83%9C%E3%83%BC%E3%83%89%201%E3%83%AA%E3%83%83%E3%83%81%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC.png" alt="Graphic work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Graphic</span>
+                        <span class="work-title">夏の大特価 LINEリッチメニュー</span>
+                        <span class="work-desc">ユーザーの行動を促す導線設計を重視したLINEリッチメニューUI。</span>
+                    </div>
+                </div>
+
+                <!-- Design (placeholder) -->
+                <div class="work-card" data-cat="design">
+                    <div class="work-placeholder">Design</div>
+                    <div class="work-overlay">
+                        <span class="work-tag">Design</span>
+                        <span class="work-title">Coming Soon</span>
+                    </div>
+                </div>
+
+                <!-- Art -->
+                <div class="work-card" data-cat="art">
+                    <img src="%E3%82%A2%E3%83%BC%E3%83%88/IMG_0878.JPG" alt="Art work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Art</span>
+                        <span class="work-title">Cathedral Knight</span>
+                        <span class="work-desc">ゴシック大聖堂と竜に対峙する騎士。ダークファンタジーをデジタルで表現。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="art">
+                    <img src="%E3%82%A2%E3%83%BC%E3%83%88/IMG_0879.JPG" alt="Art work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Art</span>
+                        <span class="work-title">花街の少女</span>
+                        <span class="work-desc">和と中国風を融合させた繊細なイラスト。赤い傘と黄金の衣装が印象的。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="art">
+                    <img src="%E3%82%A2%E3%83%BC%E3%83%88/IMG_1823.PNG" alt="Art work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Art</span>
+                        <span class="work-title">Digital World</span>
+                        <span class="work-desc">魚眼レンズ越しの近未来空間。デジタルの世界への没入感を演出したイラスト。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="art">
+                    <img src="%E3%82%A2%E3%83%BC%E3%83%88/IMG_E3164.JPG" alt="Art work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Art</span>
+                        <span class="work-title">Flow</span>
+                        <span class="work-desc">青と紫の波が渦巻く抽象油彩。感情の流れと動きをキャンバスに込めた作品。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="art">
+                    <img src="%E3%82%A2%E3%83%BC%E3%83%88/IMG_E3221.JPG" alt="Art work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Art</span>
+                        <span class="work-title">Bloom</span>
+                        <span class="work-desc">生命力あふれる花々を鮮やかな色彩で描いた油彩。光と色の饗宴。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="art">
+                    <img src="%E3%82%A2%E3%83%BC%E3%83%88/%E6%82%AA%E9%AD%94%EF%BC%91.PNG" alt="Art work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Art</span>
+                        <span class="work-title">Blue Rose</span>
+                        <span class="work-desc">幻想的な回廊で青い薔薇を抱く少女。静寂と神秘が漂うイラスト作品。</span>
+                    </div>
+                </div>
+                <div class="work-card" data-cat="art">
+                    <img src="%E3%82%A2%E3%83%BC%E3%83%88/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB_000%20(5).jpeg" alt="Art work" loading="lazy">
+                    <div class="work-overlay">
+                        <span class="work-tag">Art</span>
+                        <span class="work-title">都市の鴉</span>
+                        <span class="work-desc">曇天の都市と一羽の烏。モノクロームの写実油彩で都市の孤独を表現。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">Nishizono Yuri</div>
+        <p class="footer-copy">&copy; 2026 Nishizono Yuri. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const btns = document.querySelectorAll('.category-btn');
+        const cards = document.querySelectorAll('.work-card');
+
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+                cards.forEach(card => {
+                    if (filter === 'all' || card.dataset.cat === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
