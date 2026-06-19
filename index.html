@@ -340,6 +340,67 @@
             .works-grid { grid-template-columns: 1fr; }
             .skills-grid { grid-template-columns: 1fr; }
         }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 40px;
+        }
+
+        .lightbox.open {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 80vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .lightbox-info {
+            text-align: center;
+            margin-top: 20px;
+            color: #fff;
+        }
+
+        .lightbox-title {
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+        }
+
+        .lightbox-desc {
+            font-size: 12px;
+            color: #aaa;
+            letter-spacing: 0.05em;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -643,6 +704,16 @@
         </div>
     </div>
 
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <img src="" alt="" id="lightbox-img">
+        <div class="lightbox-info">
+            <p class="lightbox-title" id="lightbox-title"></p>
+            <p class="lightbox-desc" id="lightbox-desc"></p>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="footer-logo">Nishizono Yuri</div>
@@ -650,6 +721,7 @@
     </footer>
 
     <script>
+        // Category filter
         const btns = document.querySelectorAll('.category-btn');
         const cards = document.querySelectorAll('.work-card');
 
@@ -668,6 +740,36 @@
                 });
             });
         });
+
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxTitle = document.getElementById('lightbox-title');
+        const lightboxDesc = document.getElementById('lightbox-desc');
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const img = card.querySelector('img');
+                if (!img) return;
+                const title = card.querySelector('.work-title');
+                const desc = card.querySelector('.work-desc');
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightboxTitle.textContent = title ? title.textContent : '';
+                lightboxDesc.textContent = desc ? desc.textContent : '';
+                lightbox.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+        function closeLightbox() {
+            lightbox.classList.remove('open');
+            document.body.style.overflow = '';
+        }
     </script>
 
 </body>
